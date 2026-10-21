@@ -1,0 +1,136 @@
+{
+  "name": "Jardi",
+  "repository": "https://github.com/cotty0311/Jardi-LocationTool",
+  "domain": "jardi.cc",
+  "current": "1.0.0",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "status": "preview",
+      "content": "content",
+      "download": null
+    }
+  ],
+  "languages": [
+    {
+      "code": "zh",
+      "label": "繁體中文",
+      "enabled": true,
+      "htmlLang": "zh-Hant"
+    },
+    {
+      "code": "en",
+      "label": "English",
+      "enabled": true
+    }
+  ],
+  "pages": [
+    {
+      "file": "Index.md",
+      "slug": "index",
+      "title": "歡迎來到 Jardi",
+      "group": "開始探索",
+      "icon": "✿",
+      "description": "從第一次連接，到自在探索。一起認識你的 iPhone 虛擬定位工具。"
+    },
+    {
+      "file": "Install.md",
+      "slug": "install",
+      "title": "下載安裝",
+      "group": "開始探索",
+      "icon": "↓",
+      "description": "準備 Mac 與 iPhone，完成安裝、權限與 USB 連接。"
+    },
+    {
+      "file": "UserGuide_0.md",
+      "slug": "interface",
+      "title": "介面介紹",
+      "group": "使用指南",
+      "icon": "▦",
+      "description": "認識狀態、主功能、歷史紀錄與提醒四大區塊。"
+    },
+    {
+      "file": "UserGuide_1.md",
+      "slug": "location",
+      "title": "虛擬定位",
+      "group": "使用指南",
+      "icon": "⌁",
+      "description": "飛經緯度、選擇世界景點與標籤座標，以及清除定位。"
+    },
+    {
+      "file": "UserGuide_1-2.md",
+      "slug": "movement",
+      "title": "虛擬移動",
+      "group": "使用指南",
+      "icon": "↝",
+      "description": "方形螺旋、沿線移動與 Advanced 設定的互動示範。"
+    },
+    {
+      "file": "UserGuide_2.md",
+      "slug": "images",
+      "title": "圖片座標工具",
+      "group": "使用指南",
+      "icon": "▧",
+      "description": "從圖片中的標記，整理出自己的座標與路線。"
+    },
+    {
+      "file": "UserGuide_3.md",
+      "slug": "notifications",
+      "title": "通知與鈴鐺",
+      "group": "使用指南",
+      "icon": "♧",
+      "description": "讓小鈴鐺提醒你路線進度與連線狀態。"
+    },
+    {
+      "file": "Data.md",
+      "slug": "data",
+      "title": "地點、路徑與備份",
+      "group": "使用指南",
+      "icon": "▤",
+      "description": "編輯常用地點，把喜歡的路線好好保存。"
+    },
+    {
+      "file": "Example.md",
+      "slug": "examples",
+      "title": "範例練習",
+      "group": "範例練習",
+      "icon": "✧",
+      "description": "從一個座標開始，練習三種日常操作。"
+    },
+    {
+      "file": "FAQ.md",
+      "slug": "faq",
+      "title": "常見問題",
+      "group": "More",
+      "icon": "?",
+      "description": "連不上手機、定位沒恢復？從這裡找答案。"
+    },
+    {
+      "file": "About.md",
+      "slug": "about",
+      "title": "關於 Jardi",
+      "group": "More",
+      "icon": "❀",
+      "description": "一個讓定位與路線整理更簡單的 Mac 小工具。"
+    },
+    {
+      "file": "Problem.md",
+      "slug": "problem",
+      "title": "回報問題",
+      "group": "More",
+      "icon": "✎",
+      "description": "整理技術問題、操作疑問與文件建議，建立一份清楚的回報。"
+    },
+    {
+      "file": "Support.md",
+      "slug": "support",
+      "title": "贊助支持",
+      "group": "More",
+      "icon": "♡",
+      "description": "分享使用心得，陪 Jardi 一點一點成長。"
+    }
+  ],
+  "feedback": {
+    "endpoint": "https://formspree.io/f/xyekavza"
+  }
+}

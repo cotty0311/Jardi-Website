@@ -1,0 +1,11 @@
+:root { color-scheme: light; --bg:#fffdf7; --text:#4e4533; --line:#e9dfc2; --control:#f8edc7; }
+:root[data-theme="dark"] { color-scheme:dark; --bg:#312c21; --text:#f1e9d4; --line:#514731; --control:#3c3422; }
+* { box-sizing:border-box; }
+html, body { margin:0; padding:0; background:var(--bg); color:var(--text); }
+body { padding:12px; }
+.jardi-demo { font-family:system-ui,sans-serif; max-width:760px; }
+.jardi-controls { gap:8px 12px; font-size:13px; padding:0 0 12px; }
+.jardi-controls button { border:1px solid var(--line); border-radius:7px; background:var(--control); color:var(--text); padding:7px 10px; font:inherit; }
+.jardi-controls input { accent-color:#a88631; }
+.jardi-controls button:focus-visible, .jardi-controls input:focus-visible { outline:2px solid #b5647c; outline-offset:3px; }
+@media(max-width:440px) { .jardi-controls { gap:8px; font-size:12px; } body { padding:8px; } }

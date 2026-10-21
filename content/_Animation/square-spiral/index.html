@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jardi · Square Spiral</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="jardi-demo">
+    <div class="jardi-controls">
+      <label for="speed">speed <input id="speed" type="range" min="1" max="20" step="1" value="15"><output id="speed-value" for="speed">15</output></label>
+      <button id="start" type="button">開始</button>
+      <button id="pause" type="button">暫停</button>
+      <button id="stop" type="button">停止</button>
+      <button id="reset" type="button">重置</button>
+    </div>
+    <div class="jardi-map" id="map" aria-label="正方形螺旋路徑動畫">
+      <img class="jardi-pin" src="images/pin.png" alt="中心標記">
+      <div id="footprints"></div>
+      <img id="avatar" src="images/avatar.png" alt="移動角色">
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>

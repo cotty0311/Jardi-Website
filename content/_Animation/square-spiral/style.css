@@ -1,0 +1,13 @@
+.jardi-demo{width:min(100%,760px);margin:auto;font-family:system-ui,sans-serif}
+.jardi-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 0}
+.jardi-controls label{display:flex;align-items:center;gap:6px}
+.jardi-controls button{padding:6px 14px;cursor:pointer}
+.jardi-controls button:disabled{opacity:.35;cursor:not-allowed}
+#speed{width:110px;max-width:25vw}
+#speed-value{min-width:2ch;font-variant-numeric:tabular-nums}
+.jardi-map{position:relative;width:100%;aspect-ratio:3/2;background:url('images/plain.png') center/100% 100% no-repeat;overflow:hidden;border-radius:12px}
+.jardi-pin,.jardi-footprint,#avatar{position:absolute;object-fit:contain;pointer-events:none}
+.jardi-pin{left:50%;top:50%;width:7%;transform:translate(-50%,-100%);z-index:1}
+.jardi-footprint{width:3.8%;transform:translate(-50%,-50%);opacity:.75;z-index:2}
+#avatar{left:50%;top:50%;width:7%;transform:translate(-50%,-50%);z-index:3}
+@media(max-width:480px){.jardi-controls{gap:8px;font-size:14px}}
