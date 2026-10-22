@@ -1,6 +1,13 @@
 const $ = selector => document.querySelector(selector);
-$('#version').addEventListener('change', e => navigate(e.target.selectedOptions[0].dataset.url));
-$('#language').addEventListener('change', e => navigate(e.target.value));
+let requestedRoute;
+$('#version').addEventListener('change', e => {
+ const target=routeFor(e.target.selectedOptions[0].dataset.url);
+ navigate(target.source.replace(/\/(?:zh|en)\//,`/${requestedRoute?.language || target.language}/`));
+});
+$('#language').addEventListener('change', e => {
+ const target=routeFor(e.target.value),current=requestedRoute || routeFor(location.href);
+ navigate(current.source.replace(/\/(?:zh|en)\//,`/${target.language}/`));
+});
 const en = () => document.documentElement.lang === 'en';
 const t = (zh, english) => en() ? english : zh;
 const themeNames = {auto:'跟隨系統',light:'淺色',dark:'深色'};
@@ -85,6 +92,8 @@ function positionPage(url, position) {
 }
 async function navigate(href,{pop=false,position,selection=variant(),replace=false}={}) {
  const route=routeFor(href,selection),url=route.url;
+ requestedRoute=route;
+ try{localStorage.setItem('jardi-language',route.language);localStorage.setItem('jardi-version',route.version)}catch{}
  navigationController?.abort();
  const controller=navigationController=new AbortController();
  try {
