@@ -6,9 +6,9 @@
   "versions": [
     {
       "version": "1.0.0",
-      "status": "preview",
+      "status": "stable",
       "content": "content",
-      "download": null
+      "download": "https://github.com/cotty0311/Jardi-LocationTool/releases/download/v1.0.0/Jardi-Location-Tool-1.0.0.dmg"
     }
   ],
   "languages": [
