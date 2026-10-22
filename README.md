@@ -83,7 +83,7 @@ npm run version:prepare -- 1.1.0
 
 ## 語言與導覽
 
-繁體中文 Markdown 放在 `content/zh/`，英文放在 `content/en/`，兩者檔名一致。網站路由為 `/版本/zh/頁面.html` 與 `/版本/en/頁面.html`；繁體中文的 HTML lang 仍為 `zh-Hant`，回報表單仍提交 `zh-TW`。舊 `/zh-Hant/` 文件網址會保留章節與查詢參數，轉到 `/zh/`。共用圖片與動畫由建置器複用。共用英文介面位於 `scripts/i18n.mjs`，搜尋與互動訊息在對應資產腳本中維護。
+繁體中文 Markdown 放在 `content/zh/`，英文放在 `content/en/`，兩者檔名一致。公開網址為 `/`、`/location` 等簡潔路徑；`/版本/zh/頁面.html` 與 `/版本/en/頁面.html` 保留作為內容載入來源。繁體中文的 HTML lang 仍為 `zh-Hant`，回報表單仍提交 `zh-TW`。舊 `/zh-Hant/` 文件網址會保留章節與查詢參數，轉到對應的簡潔網址。共用圖片與動畫由建置器複用。共用英文介面位於 `scripts/i18n.mjs`，搜尋與互動訊息在對應資產腳本中維護。
 
 站內文件導覽使用 History API 更新內容，保留原本的 header DOM；返回／前進、語言與版本切換均支援。首次載入或 JavaScript 不可用時，仍可直接開啟每個靜態 HTML 頁面。動畫的獨立頁面、下載與外部連結沿用一般瀏覽器導覽。
 

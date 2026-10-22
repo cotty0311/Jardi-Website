@@ -5,7 +5,7 @@
 - Custom domain: `jardi.cc`
 - Canonical document routes: `/`, `/install`, `/location`, etc.
 - Language and version selections persist in browser storage; payloads remain under `/1.0.0/zh/` and `/1.0.0/en/`.
-- Legacy `/1.0.0/zh-Hant/*.html` pages redirect to `/zh/`, retaining query and hash.
+- Legacy `/1.0.0/zh-Hant/*.html` pages redirect through the Chinese payload to the clean public route, retaining query and hash.
 
 ## Release gate
 
