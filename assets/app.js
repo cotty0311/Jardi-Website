@@ -16,7 +16,7 @@ async function openSearch(){
  if(!dialog.open) dialog.showModal(); input.focus();
  if(!searchData){
   status.textContent=t('正在載入搜尋索引…','Loading search index…');
-  try{const request = searchRequest ||= fetch(new URL('search.json', location.href)).then(r=>{if(!r.ok) throw Error();return r.json()}); const data=await request; if(request!==searchRequest)return; searchData=data;renderSearch()}
+  try{const request = searchRequest ||= fetch(new URL(`/${document.documentElement.dataset.version}/${en()?'en':'zh'}/search.json`,location.origin)).then(r=>{if(!r.ok) throw Error();return r.json()}); const data=await request; if(request!==searchRequest)return; searchData=data;renderSearch()}
   catch{searchRequest=null;status.textContent=t('無法載入搜尋。請確認網路後關閉並重開搜尋；也可使用左側目錄。','Search could not load. Check your connection and reopen search, or use the sidebar.')}
  }
 }
@@ -61,6 +61,15 @@ function syncNode(current, next) {
  if(current instanceof HTMLSelectElement)current.selectedIndex=next.selectedIndex;
 }
 let navigationController;
+function variant(){return {version:document.documentElement.dataset.version,language:en()?'en':'zh'}}
+function cleanPath(slug){return slug==='index'?'/':'/'+slug}
+function routeFor(href, selection=variant()){
+ const url=new URL(href,document.baseURI);
+ const legacy=url.pathname.match(/^\/(\d+\.\d+\.\d+(?:-[\w.-]+)?)\/(zh|zh-Hant|en)\/([^/]+)\.html$/);
+ const slug=legacy?legacy[3]:url.pathname.replace(/^\/|\/$/g,'').replace(/\.html$/,'')||'index';
+ const chosen=legacy?{version:legacy[1],language:legacy[2]==='en'?'en':'zh'}:selection;
+ return {url:new URL(cleanPath(slug)+url.search+url.hash,location.origin),source:`/${chosen.version}/${chosen.language}/${slug}.html`,...chosen};
+}
 let displayedURL=location.href;
 history.scrollRestoration='manual';
 history.replaceState({...history.state,scroll:[scrollX,scrollY]},'',location.href);
@@ -74,12 +83,12 @@ function positionPage(url, position) {
  if(url.hash){try{document.getElementById(decodeURIComponent(url.hash.slice(1)))?.scrollIntoView();}catch{} }
  else scrollTo({left:0,top:0,behavior:"instant"});
 }
-async function navigate(href,{pop=false,position}={}) {
- const url=new URL(href,location.href);
+async function navigate(href,{pop=false,position,selection=variant(),replace=false}={}) {
+ const route=routeFor(href,selection),url=route.url;
  navigationController?.abort();
  const controller=navigationController=new AbortController();
  try {
-  const response=await fetch(url,{signal:controller.signal});
+  const response=await fetch(route.source,{signal:controller.signal});
   if(!response.ok)throw Error('Navigation failed');
   const next=new DOMParser().parseFromString(await response.text(),'text/html');
   if(!next.querySelector('.layout') || !next.querySelector('.topbar'))throw Error('Not a documentation page');
@@ -87,10 +96,14 @@ async function navigate(href,{pop=false,position}={}) {
   if(!pop)history.replaceState({...history.state,scroll:[scrollX,scrollY]},'',location.href);
   document.querySelectorAll('dialog[open]').forEach(d=>d.close());
   // Set the address first so relative assets in the new content resolve correctly.
-  if(!pop)history.pushState({scroll:[0,0]},'',url);
+  if(!pop)history[replace?'replaceState':'pushState']({scroll:[0,0],version:route.version,language:route.language},'',url);
   displayedURL=url.href;
   document.title=next.title;
   document.documentElement.lang=next.documentElement.lang;
+  document.documentElement.dataset.version=route.version;
+  document.querySelector('base').href=next.querySelector('base').href;
+  document.querySelector('link[rel="canonical"]').href=next.querySelector('link[rel="canonical"]').href;
+  try{localStorage.setItem('jardi-language',route.language);localStorage.setItem('jardi-version',route.version)}catch{}
   document.body.dataset.page=next.body.dataset.page;
   $('meta[name="description"]').content=next.querySelector('meta[name="description"]').content;
   syncNode($('.topbar'),next.querySelector('.topbar'));
@@ -111,7 +124,7 @@ document.addEventListener('click',event=>{
  const link=event.target.closest('a[href]');
  if(!link || link.hasAttribute('download') || (link.target && link.target!=='_self'))return;
  const url=new URL(link.href,location.href);
- if(url.origin!==location.origin || !/\/[^/]+\/(?:zh|en)\/[^/]+\.html$/.test(url.pathname))return;
+ if(url.origin!==location.origin || !['/',...Array.from(document.querySelectorAll('.sidebar a'),a=>new URL(a.href).pathname)].includes(url.pathname))return;
  if(url.pathname===location.pathname && url.search===location.search && url.hash){
   navigationController?.abort();
   document.querySelectorAll('dialog[open]').forEach(d=>d.close());
@@ -121,7 +134,18 @@ document.addEventListener('click',event=>{
 });
 addEventListener('popstate',event=>{
  const current=new URL(displayedURL),target=new URL(location.href);
- if(current.pathname===target.pathname && current.search===target.search){navigationController?.abort();displayedURL=target.href;positionPage(target,event.state?.scroll);return;}
- navigate(location.href,{pop:true,position:event.state?.scroll});
+ if(current.pathname===target.pathname && current.search===target.search && (!event.state?.language || event.state.language===variant().language) && (!event.state?.version || event.state.version===variant().version)){navigationController?.abort();displayedURL=target.href;positionPage(target,event.state?.scroll);return;}
+ navigate(location.href,{pop:true,position:event.state?.scroll,selection:event.state?.version?event.state:variant()});
 });
 addEventListener('hashchange',()=>{displayedURL=location.href;});
+
+// Clean public routes preserve the selected language/version across reloads.
+let initial=variant();
+try{
+ const savedVersion=localStorage.getItem('jardi-version'),savedLanguage=localStorage.getItem('jardi-language');
+ if([...$('#version').options].some(o=>o.value===savedVersion))initial.version=savedVersion;
+ if(['zh','en'].includes(savedLanguage))initial.language=savedLanguage;
+}catch{}
+const legacyRoute=/^\/\d+\.\d+\.\d+[^/]*\/(?:zh|en)\//.test(location.pathname);
+if(legacyRoute || initial.version!==variant().version || initial.language!==variant().language)navigate(location.href,{selection:initial,replace:true});
+else {history.replaceState({...history.state,...initial},'',cleanPath(document.body.dataset.page)+location.search+location.hash);displayedURL=location.href;}

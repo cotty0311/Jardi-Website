@@ -9,8 +9,8 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 for(const language of ['zh','en'])for(const name of ['block','open_edit_csv']){
  test(`${name} includes both ${language} variants and intrinsic dimensions`,()=>{
   const html=renderMedia(`<img src="../images/screenshot/${name}-light-${language}.png" alt="Guide image" style="width:3000px">`,language,path.join(root,'content'));
-  assert.ok(html.includes(`src="images/screenshot/${name}-light-${language}.png"`));
-  assert.ok(html.includes(`srcset="images/screenshot/${name}-dark-${language}.png"`));
+  assert.ok(html.includes(`src="images/screenshot/${name}-light-${language}.webp"`));
+  assert.ok(html.includes(`srcset="images/screenshot/${name}-dark-${language}.webp"`));
   assert.match(html,/width="\d+" height="\d+"/);
   assert.ok(!html.includes('3000px'));
  });

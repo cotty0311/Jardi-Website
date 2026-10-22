@@ -1372,3 +1372,15 @@ html { scrollbar-gutter: stable; }
 .theme-picture img { width: 100%; height: auto; margin: 0; }
 .theme-picture.interface-shot { max-width: 100%; }
 .theme-picture.editor-shot { width: 340px; max-width: 100%; }
+
+/* Download and the person behind Jardi. */
+.download-panel{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:2rem;margin:1.8rem 0 2.5rem;padding:1.8rem;border:1px solid var(--line);border-radius:24px;background:var(--panel)}
+.download-panel .connection-art{width:100%;max-width:300px;height:auto;margin:0;justify-self:center}
+.download-panel h2{margin-top:0}
+.download-panel .button{font-size:1.15rem;line-height:1.4;padding:1.1rem 1.4rem;min-height:64px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.creator-gallery{display:flex;align-items:center;justify-content:center;gap:1.8rem;margin:2rem 0 3rem}
+.creator-gallery figure{flex:0 1 220px;min-width:0;margin:0;text-align:center}
+.creator-gallery img{display:block;width:100%;aspect-ratio:1;object-fit:contain;height:auto;border-radius:24px;margin:0 0 .8rem}
+.creator-gallery figcaption{font-size:.85rem;line-height:1.5;opacity:.8}
+.creator-connection{font-size:1.6rem;color:#d895a4}
+@media(max-width:640px){.download-panel{grid-template-columns:1fr;gap:1rem;padding:1.25rem}.download-panel .connection-art{max-width:220px}.download-copy{text-align:center}.creator-gallery{gap:1rem}.creator-connection{display:none}.creator-gallery figure{flex-basis:46%}}

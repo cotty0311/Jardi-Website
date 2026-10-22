@@ -2,11 +2,15 @@
 
 Connect your iPhone to your Mac with a USB cable, then install and set up Jardi.
 
-<img class="illustration-small" src="../images/connect-mac-iphone.png" alt="Connect a Mac and iPhone with USB">
-
-## Download Jardi
+<section class="download-panel">
+<div class="download-copy">
+<h2 id="download-jardi">Download Jardi</h2>
 
 {{download}}
+
+</div>
+<img src="../images/connect-mac-iphone.png" alt="Connect a Mac and iPhone with USB" class="connection-art">
+</section>
 
 Use the release information for the version selected on this page. The packaged app does not require a separate installation of Python, pymobiledevice3, or developer tools.
 

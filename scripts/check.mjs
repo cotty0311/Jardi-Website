@@ -9,6 +9,19 @@ const files=walk(out), htmlFiles=files.filter(f=>f.endsWith('.html'));
 let count=0;
 for(const f of htmlFiles){
  const html=fs.readFileSync(f,'utf8');
+ const pageURL=new URL('/'+path.relative(out,f),'https://jardi.cc');
+ const baseURL=new URL(html.match(/<base href="([^"]+)"/)?.[1] || pageURL.href,pageURL);
+ const resolveLink=link=>{
+  const url=new URL(link,baseURL);
+  let target=path.join(out,decodeURIComponent(url.pathname));
+  if(fs.existsSync(target)&&fs.statSync(target).isDirectory())target=path.join(target,'index.html');
+  if(url.hash && html.includes('<base ')){
+   const slug=url.pathname.replace(/^\/|\/$/g,'')||'index';
+   const localized=path.join(out,baseURL.pathname,slug+'.html');
+   if(fs.existsSync(localized))target=localized;
+  }
+  return {target,hash:url.hash.slice(1)};
+ };
  assert.ok(!/<!--\s*#?\s*TODO/i.test(html), `尚未完成 TODO: ${f}`);
  assert.ok(!/\{\{(?:download|version-status|update-status|report-form)\}\}/.test(html), `未處理標記: ${f}`);
  if(/[/\\](zh|en)[/\\][^/\\]+\.html$/.test(f)) {
@@ -20,14 +33,25 @@ for(const f of htmlFiles){
   }
  }
  if(/[/\\](zh|en)[/\\][^/\\]+\.html$/.test(f)) {
-  for(const [,link] of html.matchAll(/<option[^>]*value="([^"\n]+\.html)"/g))assert.ok(fs.existsSync(path.resolve(path.dirname(f),link)),`Missing language route: ${link}`);
+  for(const [,link] of html.matchAll(/<option[^>]*value="([^"\n]+\.html)"/g))assert.ok(fs.existsSync(resolveLink(link).target),`Missing language route: ${link}`);
   assert.ok(!/(?:src|srcset|href)="http:\/\//.test(html),`Insecure resource: ${f}`);
+ }
+ if(html.includes('class="layout"')){
+  assert.ok(html.includes('<base href="/'),`Missing content base: ${f}`);
+  for(const [,href] of html.matchAll(/<a[^>]*href="([^"]+)"/g)){
+   if(href.startsWith('/')&&!href.startsWith('//'))assert.ok(!/\.html|\/(?:zh|en)\/|\d+\.\d+\.\d+/.test(href),`Noncanonical document link: ${href}`);
+  }
+  if(html.includes('data-page="install"')){
+   const download=html.match(/<a[^>]*class="button"[^>]*href="([^"]+\.dmg)"[^>]*>/)?.[0];
+   assert.ok(download?.includes(' download')&&!download.includes('target='),`Download must stay in the current tab: ${f}`);
+  }
  }
  const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
  assert.equal(new Set(ids).size,ids.length,`重複 ID: ${f}`);
  for(const [,link] of html.matchAll(/(?:href|src|srcset|poster|data-url)="([^"]+)"/g)){
   if(/^(https?:|mailto:|data:)/.test(link))continue;
-  const [pathname,hash]=link.split('#');const target=path.resolve(path.dirname(f),decodeURIComponent(pathname)||path.basename(f));
+  if(link===html.match(/<base href="([^"]+)"/)?.[1])continue;
+  const {target,hash}=resolveLink(link);
   assert.ok(fs.existsSync(target),`缺少檔案: ${link} (${f})`);
   if(hash){assert.ok(fs.readFileSync(target,'utf8').includes(`id="${decodeURIComponent(hash)}"`),`缺少錨點: ${link} (${f})`)}
   count++;
@@ -44,5 +68,5 @@ for(const f of files.filter(f=>f.endsWith('.css'))){
   count++;
  }
 }
-for(const f of files.filter(f=>f.endsWith('search.json'))){const docs=JSON.parse(fs.readFileSync(f));assert.ok(docs.length);for(const doc of docs){assert.ok(doc.title&&doc.text);assert.ok(fs.existsSync(path.join(path.dirname(f),doc.url)))}}
+for(const f of files.filter(f=>f.endsWith('search.json'))){const docs=JSON.parse(fs.readFileSync(f));assert.ok(docs.length);for(const doc of docs){assert.ok(doc.title&&doc.text);assert.ok(fs.existsSync(path.join(out,doc.url==='/'?'index.html':doc.url+'/index.html')))}}
 console.log(`Passed: ${htmlFiles.length} HTML pages, ${count} local asset/link/anchor references, search indexes.`);

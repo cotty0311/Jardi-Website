@@ -3,14 +3,15 @@
 - Website repository: https://github.com/cotty0311/Jardi-Website
 - App repository (unchanged): https://github.com/cotty0311/Jardi-LocationTool
 - Custom domain: `jardi.cc`
-- Canonical document routes: `/1.0.0/zh/` and `/1.0.0/en/`
+- Canonical document routes: `/`, `/install`, `/location`, etc.
+- Language and version selections persist in browser storage; payloads remain under `/1.0.0/zh/` and `/1.0.0/en/`.
 - Legacy `/1.0.0/zh-Hant/*.html` pages redirect to `/zh/`, retaining query and hash.
 
 ## Release gate
 
 Pushes and pull requests only build and test. Publication requires a manual run of
 `Publish Jardi documentation` on `main` with the `deploy` checkbox enabled.
-Do not enable deployment until the checks below pass and DNS ownership/setup is confirmed.
+Enable deployment after the checks below pass. DNS ownership and setup were confirmed on 2026-10-22.
 
 Local verification:
 
@@ -39,11 +40,10 @@ a local mock receiver and do not send email.
 `dist/CNAME` records the intended domain, but Actions-based publishing uses the
 repository's Pages settings; that file alone does not bind the domain.
 
-## DNS records to prepare
+## Configured DNS records
 
-The nameservers observed on 2026-10-21 were `georgia.ns.cloudflare.com` and
-`vicky.ns.cloudflare.com`. Provider/account confirmation is still required before
-changing DNS. No apex A records or www CNAME were returned at inspection time.
+The authoritative nameservers are `georgia.ns.cloudflare.com` and
+`vicky.ns.cloudflare.com`. Cloudflare is confirmed. The four DNS-only A records and the www CNAME below are configured; GitHub has approved a certificate for both hostnames and HTTPS enforcement is enabled (verified 2026-10-22).
 
 | Type | Name | Value |
 | --- | --- | --- |
@@ -61,8 +61,8 @@ dig jardi.cc A +short
 dig www.jardi.cc CNAME +short
 curl -I https://jardi.cc/
 curl -I http://jardi.cc/
-curl -I https://jardi.cc/1.0.0/zh/interface.html
-curl -I https://jardi.cc/1.0.0/en/location.html
+curl -I https://jardi.cc/interface
+curl -I https://jardi.cc/location
 ```
 
 DNS propagation and certificate availability may take time. HTTPS is complete only

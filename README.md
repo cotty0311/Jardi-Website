@@ -138,3 +138,15 @@ npm run version:prepare -- 1.1.0
 建置器會產生 `<picture>`，自動加入同語言的 dark 版本。跟隨系統模式使用瀏覽器的配色偏好；手動選擇淺色／深色時會立即覆寫，站內切頁與語言切換也會重新套用。`npm run check` 會檢查 light 與 dark 資源。
 
 連線插圖與作者圖片使用 `illustration-small`，目前寬度 220px、最大寬度 100%、高度自動。可在 Markdown 中寫 `<img class="illustration-small" src="../images/connect-mac-iphone.png" alt="Mac 與 iPhone 連接">`。
+
+## 公開網址、語言與版本
+
+公開網址使用 `/`、`/install`、`/location` 等路徑，不包含語言、版本或 `.html`。
+GitHub Pages 會提供各路徑的 `index.html`，可直接開啟與重新整理。
+語言與版本由頁首選擇，並保存於目前瀏覽器；同一網址可顯示所選內容。
+分享網址時，對方會使用自己瀏覽器保存的選擇，首次造訪預設繁體中文與最新 stable 版本。
+`/<version>/<language>/*.html` 保留作為內容載入來源及舊連結相容入口。
+
+圖片使用預先產生的 WebP，Markdown 仍可引用原始 PNG/JPG。
+更新圖片後執行 `python3 scripts/optimize-images.py`（需 Pillow），再執行 `npm run check`。
+若原圖已變更、尚未重新最佳化，建置會自動回用原圖，避免顯示舊圖。

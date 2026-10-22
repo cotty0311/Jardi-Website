@@ -2,15 +2,15 @@
 
 用 USB 線連線 iPhone 與 Mac，安裝 Jardi 並啟用。
 
-<!-- ![Mac 與 iPhone 連接](../images/connect-mac-iphone.png) -->
-<p align="center">
-  <img src="../images/connect-mac-iphone.png"
-       alt="Mac 與 iPhone 連接" class="illustration-small">
-</p>
-
-## 下載 Jardi
+<section class="download-panel">
+<div class="download-copy">
+<h2 id="download-jardi">下載 Jardi</h2>
 
 {{download}}
+
+</div>
+<img src="../images/connect-mac-iphone.png" alt="Mac 與 iPhone 連接" class="connection-art">
+</section>
 
 
 

@@ -4,7 +4,11 @@
 
 The name comes from the first five letters of the author's Threads username, [@jardiniere_pkm](https://www.threads.com/@jardiniere_pkm). “Jardiniere” is inspired by the French word *jardinière*, meaning a female gardener.
 
-<img class="illustration-small" src="../images/有翅膀的人.jpg" alt="The author">
+<div class="creator-gallery">
+<figure><img src="../images/有翅膀的人.jpg" alt="Author jardiniere_pkm’s profile picture"><figcaption>Author jardiniere_pkm’s profile picture</figcaption></figure>
+<span class="creator-connection" aria-hidden="true">✿</span>
+<figure><img src="../images/icon.png" alt="Jardi - Location Tool"><figcaption>Jardi - Location Tool</figcaption></figure>
+</div>
 
 ## How data is handled
 

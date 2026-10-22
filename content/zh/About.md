@@ -4,10 +4,11 @@
 
 **Jardi - Location Tool™** 名稱源自作者小禾的 threads 帳號名 [@jardiniere_pkm](https://www.threads.com/@jardiniere_pkm) ，取前五個字母，而 jardiniere 則是取自法文 jardinière 女園丁的意思。
 
-<p align="center">
-  <img src="../images/有翅膀的人.jpg"
-       alt="作者圖片" class="illustration-small">
-</p>
+<div class="creator-gallery">
+<figure><img src="../images/有翅膀的人.jpg" alt="作者 jardiniere_pkm 頭貼"><figcaption>作者 jardiniere_pkm 頭貼</figcaption></figure>
+<span class="creator-connection" aria-hidden="true">✿</span>
+<figure><img src="../images/icon.png" alt="Jardi - Location Tool"><figcaption>Jardi - Location Tool</figcaption></figure>
+</div>
 
 ## 資料如何處理
 
