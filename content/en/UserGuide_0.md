@@ -9,6 +9,8 @@ Jardi has four main areas: connection status, controls, recent activity, and the
 
 ![The four areas of the Jardi main window](../images/screenshot/block-light-en.png)
 
+> Menu Bar can change language: Traditional Chinese or English
+
 ## Status
 
 Before starting, check that your iPhone is connected and ready. During movement, check route progress here. Resolve connection errors before restarting; see [FAQ](FAQ.md). For your first connection, follow [Installation](Install.md).

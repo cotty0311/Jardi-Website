@@ -70,7 +70,7 @@ export function build() {
      return `<a href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}>${this.parser.parseInline(tokens)}</a>`;
     }
    }});
-   let raw = page.raw.replace('{{download}}', v.download ? `<a class="button" href="${esc(v.download)}" download>↓ 下載 Jardi ${esc(v.version)} · macOS</a>` : '> **正式版準備中**：目前尚未提供此版本的公開安裝包。發佈後，這裡會提供對應版本的 DMG 下載。你可以先閱讀設定步驟。');
+   let raw = page.raw.replace('{{download}}', v.download ? `<a class="button" href="${esc(v.download)}" download>⬇︎ 下載 Jardi ${esc(v.version)} · macOS</a>` : '> **正式版準備中**：目前尚未提供此版本的公開安裝包。發佈後，這裡會提供對應版本的 DMG 下載。你可以先閱讀設定步驟。');
    raw = raw.replace('{{version-status}}', `這份指南對應 Jardi **${v.version}**（${v.status === 'stable' ? '正式版' : '準備中'}）。請以右上角所選版本的安裝與操作說明為準。`)
     .replace('{{update-status}}', v.status === 'stable' ? '確認 Mac 可以存取 GitHub 更新來源。若更新來源暫時無法下載，可稍後重試，或從本版本的[安裝頁](Install.md)取得安裝包。回報時請附上版本與完整錯誤訊息。' : '此版本正在準備中，先前測試版已撤下。正式版上線前，既有更新網址可能沒有 appcast，因而顯示下載失敗；正式發佈後請以安裝頁的資訊為準。');
    if(isEnglish) raw = page.raw.replace('{{download}}', v.download ? `<a class="button" href="${esc(v.download)}" download>↓ Download Jardi ${esc(v.version)} · macOS</a>` : '> **Release in preparation:** a public installer is not yet available for this version. Its DMG download will appear here when released. You can read the setup instructions now.')

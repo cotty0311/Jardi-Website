@@ -38,7 +38,7 @@
       "slug": "install",
       "title": "下載安裝",
       "group": "開始探索",
-      "icon": "↓",
+      "icon": "⬇︎",
       "description": "準備 Mac 與 iPhone，完成安裝、權限與 USB 連接。"
     },
     {
@@ -46,7 +46,7 @@
       "slug": "interface",
       "title": "介面介紹",
       "group": "使用指南",
-      "icon": "▦",
+      "icon": "⌑",
       "description": "認識狀態、主功能、歷史紀錄與提醒四大區塊。"
     },
     {
@@ -54,7 +54,7 @@
       "slug": "location",
       "title": "虛擬定位",
       "group": "使用指南",
-      "icon": "⌁",
+      "icon": "⊹",
       "description": "飛經緯度、選擇世界景點與標籤座標，以及清除定位。"
     },
     {
@@ -70,7 +70,7 @@
       "slug": "images",
       "title": "圖片座標工具",
       "group": "使用指南",
-      "icon": "▧",
+      "icon": "𖥣",
       "description": "從圖片中的標記，整理出自己的座標與路線。"
     },
     {
@@ -86,7 +86,7 @@
       "slug": "data",
       "title": "地點、路徑與備份",
       "group": "使用指南",
-      "icon": "▤",
+      "icon": "⛁",
       "description": "編輯常用地點，把喜歡的路線好好保存。"
     },
     {

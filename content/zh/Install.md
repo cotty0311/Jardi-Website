@@ -12,7 +12,7 @@
 
 {{download}}
 
-請以本頁所選版本的發佈資訊為準。正式安裝包不需要另外安裝 Python、pymobiledevice3 或開發工具。
+
 
 ## 使用需求
 
