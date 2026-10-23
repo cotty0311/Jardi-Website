@@ -9,6 +9,11 @@ const files=walk(out), htmlFiles=files.filter(f=>f.endsWith('.html'));
 let count=0;
 for(const f of htmlFiles){
  const html=fs.readFileSync(f,'utf8');
+ const head=html.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1];
+ assert.ok(head,`Missing head: ${f}`);
+ for(const name of ['favicon.ico','favicon-16x16.png','favicon-32x32.png','apple-touch-icon.png']){
+  assert.ok(head.includes(`href="/${name}?v=`),`Missing favicon ${name}: ${f}`);
+ }
  const pageURL=new URL('/'+path.relative(out,f),'https://jardi.cc');
  const baseURL=new URL(html.match(/<base href="([^"]+)"/)?.[1] || pageURL.href,pageURL);
  const resolveLink=link=>{
