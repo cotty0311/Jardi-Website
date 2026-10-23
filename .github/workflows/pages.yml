@@ -32,6 +32,10 @@ jobs:
         with:
           node-version: 22
       - name: Install and validate
+        env:
+          JARDI_CLOUDFLARE_TOKEN: ${{ vars.JARDI_CLOUDFLARE_TOKEN }}
+          JARDI_GA4_MEASUREMENT_ID: ${{ vars.JARDI_GA4_MEASUREMENT_ID }}
+          JARDI_GA4_HISTORY_TRACKING_DISABLED: ${{ vars.JARDI_GA4_HISTORY_TRACKING_DISABLED }}
         working-directory: ${{ steps.site.outputs.directory }}
         run: |
           npm ci

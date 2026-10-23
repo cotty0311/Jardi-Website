@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {build,root} from './build.mjs';
-build();
+import {analyticsConfig} from './analytics.mjs';
+const tracking=analyticsConfig(build());
 const out=path.join(root,'dist');
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(p,e.name)):[path.join(p,e.name)]);
 const files=walk(out), htmlFiles=files.filter(f=>f.endsWith('.html'));
@@ -13,6 +14,16 @@ for(const f of htmlFiles){
  assert.ok(head,`Missing head: ${f}`);
  for(const name of ['favicon.ico','favicon-16x16.png','favicon-32x32.png','apple-touch-icon.png']){
   assert.ok(head.includes(`href="/${name}?v=`),`Missing favicon ${name}: ${f}`);
+ }
+ const analyticsEnabled=Boolean(tracking.cloudflareToken || tracking.ga4MeasurementId);
+ const redirect=/http-equiv=["']refresh["']/i.test(html);
+ const trackingConfig=html.match(/<script id="jardi-analytics-config" type="application\/json">([\s\S]*?)<\/script>/);
+ assert.equal(Boolean(trackingConfig),analyticsEnabled&&!redirect,`Analytics inclusion mismatch: ${f}`);
+ if(trackingConfig){
+  assert.deepEqual(JSON.parse(trackingConfig[1]),tracking,`Analytics config mismatch: ${f}`);
+  assert.equal((html.match(/src="\/assets\/analytics.js\?v=/g)||[]).length,1,`Duplicate analytics module: ${f}`);
+  const appIndex=html.indexOf('src="../../assets/app.js');
+  if(appIndex!==-1)assert.ok(html.indexOf('src="/assets/analytics.js')<appIndex,`Analytics must register before router startup: ${f}`);
  }
  const pageURL=new URL('/'+path.relative(out,f),'https://jardi.cc');
  const baseURL=new URL(html.match(/<base href="([^"]+)"/)?.[1] || pageURL.href,pageURL);

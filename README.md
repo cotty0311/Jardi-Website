@@ -150,3 +150,9 @@ GitHub Pages 會提供各路徑的 `index.html`，可直接開啟與重新整理
 圖片使用預先產生的 WebP，Markdown 仍可引用原始 PNG/JPG。
 更新圖片後執行 `python3 scripts/optimize-images.py`（需 Pillow），再執行 `npm run check`。
 若原圖已變更、尚未重新最佳化，建置會自動回用原圖，避免顯示舊圖。
+
+## 網站流量分析
+
+Cloudflare Web Analytics 與 GA4 設定在 `site.config.json` 的 `analytics` 區塊，
+也可使用 GitHub Actions repository variables。未填入真實 ID 時維持停用。
+GA4 的後台換頁追蹤設定、事件名稱、測試與部署步驟請見 [ANALYTICS.md](ANALYTICS.md)。

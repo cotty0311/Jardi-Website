@@ -124,6 +124,7 @@ async function navigate(href,{pop=false,position,selection=variant(),replace=fal
   searchData=searchRequest=null;input.value='';results.replaceChildren();
   themeLabel();
   document.dispatchEvent(new Event('jardi:navigate'));
+  document.dispatchEvent(new Event('jardi:pageview'));
   $('#main').focus({preventScroll:true});
   positionPage(url,position);
  }catch(error){if(error.name!=='AbortError')location.assign(url.href);}
@@ -157,4 +158,4 @@ try{
 }catch{}
 const legacyRoute=/^\/\d+\.\d+\.\d+[^/]*\/(?:zh|en)\//.test(location.pathname);
 if(legacyRoute || initial.version!==variant().version || initial.language!==variant().language)navigate(location.href,{selection:initial,replace:true});
-else {history.replaceState({...history.state,...initial},'',cleanPath(document.body.dataset.page)+location.search+location.hash);displayedURL=location.href;}
+else {history.replaceState({...history.state,...initial},'',cleanPath(document.body.dataset.page)+location.search+location.hash);displayedURL=location.href;document.dispatchEvent(new Event('jardi:pageview'));}
