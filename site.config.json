@@ -134,8 +134,8 @@
     "endpoint": "https://formspree.io/f/xyekavza"
   },
   "analytics": {
-    "cloudflareToken": null,
-    "ga4MeasurementId": null,
-    "ga4HistoryTrackingDisabled": false
+    "cloudflareToken": "cb4dd9f230c54fc3999a57403ec685ad",
+    "ga4MeasurementId": "G-6FSWGMYZQ5",
+    "ga4HistoryTrackingDisabled": true
   }
 }
