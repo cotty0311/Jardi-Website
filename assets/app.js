@@ -114,6 +114,7 @@ async function navigate(href,{pop=false,position,selection=variant(),replace=fal
   document.querySelector('link[rel="canonical"]').href=next.querySelector('link[rel="canonical"]').href;
   try{localStorage.setItem('jardi-language',route.language);localStorage.setItem('jardi-version',route.version)}catch{}
   document.body.dataset.page=next.body.dataset.page;
+  document.body.dataset.guide=next.body.dataset.guide;
   $('meta[name="description"]').content=next.querySelector('meta[name="description"]').content;
   syncNode($('.topbar'),next.querySelector('.topbar'));
   syncNode($('.mobile-bar'),next.querySelector('.mobile-bar'));
