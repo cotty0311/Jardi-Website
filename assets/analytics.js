@@ -27,7 +27,7 @@
     window.gtag('config',settings.ga4MeasurementId,{send_page_view:false,page_location:view.page_location,page_referrer:cleanURL(document.referrer)});
     loadScript('jardi-ga4','https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(settings.ga4MeasurementId));
    }
-   if(settings.cloudflareToken)loadScript('jardi-cloudflare','https://static.cloudflareinsights.com/beacon.min.js',{'data-cf-beacon':JSON.stringify({token:settings.cloudflareToken,spa:true})});
+   if(settings.cloudflareToken)loadScript('jardi-cloudflare','https://static.cloudflareinsights.com/beacon.min.js',{type:'module','data-cf-beacon':JSON.stringify({token:settings.cloudflareToken,spa:true})});
   }
   function context() {
    return {page_location:cleanURL(location.href),page_title:document.title,

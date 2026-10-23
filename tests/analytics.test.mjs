@@ -73,7 +73,7 @@ test('manual page views track committed content exactly once and retain language
  b.view('location','en');b.dispatch('jardi:pageview');
  assert.equal(b.events('page_view').length,1);assert.equal(b.events('guide_view').length,1);
  assert.equal(b.calls().find(c=>c[0]==='config')[2].send_page_view,false);
- assert.equal(b.scripts.length,2);assert.equal(JSON.parse(b.scripts.find(s=>s.id==='jardi-cloudflare')['data-cf-beacon']).spa,true);
+ assert.equal(b.scripts.length,2);assert.equal(b.scripts.find(s=>s.id==='jardi-cloudflare').type,'module');assert.equal(JSON.parse(b.scripts.find(s=>s.id==='jardi-cloudflare')['data-cf-beacon']).spa,true);
  b.location.href+='?email=private#next';b.dispatch('jardi:pageview');assert.equal(b.events('page_view').length,1,'Queries and anchors do not duplicate views');
  b.view('location','zh-Hant');assert.equal(b.events('language_switch').length,1);assert.equal(b.events('page_view').length,2);
  b.view('location','zh-Hant','2.0.0');assert.equal(b.events('page_view').length,3,'Same route, different documentation version');
