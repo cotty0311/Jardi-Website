@@ -73,8 +73,9 @@ function cleanPath(slug){return slug==='index'?'/':'/'+slug}
 function routeFor(href, selection=variant()){
  const url=new URL(href,document.baseURI);
  const legacy=url.pathname.match(/^\/(\d+\.\d+\.\d+(?:-[\w.-]+)?)\/(zh|zh-Hant|en)\/([^/]+)\.html$/);
- const slug=legacy?legacy[3]:url.pathname.replace(/^\/|\/$/g,'').replace(/\.html$/,'')||'index';
- const chosen=legacy?{version:legacy[1],language:legacy[2]==='en'?'en':'zh'}:selection;
+ const localized=url.pathname.match(/^\/(en)\/(?:([a-z-]+)\/?$)?$/);
+ const slug=legacy?legacy[3]:localized?(localized[2]||'index'):url.pathname.replace(/^\/|\/$/g,'').replace(/\.html$/,'')||'index';
+ const chosen=legacy?{version:legacy[1],language:legacy[2]==='en'?'en':'zh'}:localized?{version:selection.version,language:localized[1]}:selection;
  return {url:new URL(cleanPath(slug)+url.search+url.hash,location.origin),source:`/${chosen.version}/${chosen.language}/${slug}.html`,...chosen};
 }
 let displayedURL=location.href;
@@ -111,11 +112,11 @@ async function navigate(href,{pop=false,position,selection=variant(),replace=fal
   document.documentElement.lang=next.documentElement.lang;
   document.documentElement.dataset.version=route.version;
   document.querySelector('base').href=next.querySelector('base').href;
-  document.querySelector('link[rel="canonical"]').href=next.querySelector('link[rel="canonical"]').href;
+  document.head.querySelectorAll('[data-jardi-seo]').forEach(node=>node.remove());
+  for(const node of next.head.querySelectorAll('[data-jardi-seo]'))document.head.append(node.cloneNode(true));
   try{localStorage.setItem('jardi-language',route.language);localStorage.setItem('jardi-version',route.version)}catch{}
   document.body.dataset.page=next.body.dataset.page;
   document.body.dataset.guide=next.body.dataset.guide;
-  $('meta[name="description"]').content=next.querySelector('meta[name="description"]').content;
   syncNode($('.topbar'),next.querySelector('.topbar'));
   syncNode($('.mobile-bar'),next.querySelector('.mobile-bar'));
   syncNode($('.skip-link'),next.querySelector('.skip-link'));
@@ -136,9 +137,13 @@ document.addEventListener('click',event=>{
  if(!link || link.hasAttribute('download') || (link.target && link.target!=='_self'))return;
  const url=new URL(link.href,location.href);
  if(url.origin!==location.origin || !['/',...Array.from(document.querySelectorAll('.sidebar a'),a=>new URL(a.href).pathname)].includes(url.pathname))return;
- if(url.pathname===location.pathname && url.search===location.search && url.hash){
-  navigationController?.abort();
+ if(url.hash && url.search===location.search && routeFor(url).source===routeFor(location.href).source){
+  event.preventDefault();navigationController?.abort();
   document.querySelectorAll('dialog[open]').forEach(d=>d.close());
+  history.replaceState({...history.state,scroll:[scrollX,scrollY]},'',location.href);
+  const target=new URL(location.href);target.hash=url.hash;
+  history.pushState({...variant(),scroll:[0,0]},'',target);displayedURL=target.href;
+  positionPage(target);
   return;
  }
  event.preventDefault();navigate(url);
@@ -152,11 +157,14 @@ addEventListener('hashchange',()=>{displayedURL=location.href;});
 
 // Clean public routes preserve the selected language/version across reloads.
 let initial=variant();
+const localizedEntry=/^\/en(?:\/|$)/.test(location.pathname);
 try{
+ if(!localizedEntry){
  const savedVersion=localStorage.getItem('jardi-version'),savedLanguage=localStorage.getItem('jardi-language');
  if([...$('#version').options].some(o=>o.value===savedVersion))initial.version=savedVersion;
  if(['zh','en'].includes(savedLanguage))initial.language=savedLanguage;
+ }
 }catch{}
 const legacyRoute=/^\/\d+\.\d+\.\d+[^/]*\/(?:zh|en)\//.test(location.pathname);
 if(legacyRoute || initial.version!==variant().version || initial.language!==variant().language)navigate(location.href,{selection:initial,replace:true});
-else {history.replaceState({...history.state,...initial},'',cleanPath(document.body.dataset.page)+location.search+location.hash);displayedURL=location.href;document.dispatchEvent(new Event('jardi:pageview'));}
+else {history.replaceState({...history.state,...initial},'',(localizedEntry?location.pathname:cleanPath(document.body.dataset.page))+location.search+location.hash);displayedURL=location.href;document.dispatchEvent(new Event('jardi:pageview'));}

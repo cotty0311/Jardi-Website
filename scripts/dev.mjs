@@ -12,7 +12,7 @@ for(const name of ['content','assets','font','scripts','site.config.json','versi
  const p=path.join(root,name);if(!fs.existsSync(p))continue;
  fs.watch(p,{recursive:fs.statSync(p).isDirectory()},()=>{clearTimeout(timer);timer=setTimeout(()=>{try{build();revision=Date.now()}catch(e){console.error('Build failed:',e.message)}},150)});
 }
-const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.ttf':'font/ttf','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.mp4':'video/mp4','.mov':'video/quicktime'};
+const mime={'.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8','.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.ttf':'font/ttf','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.mp4':'video/mp4','.mov':'video/quicktime'};
 const server=http.createServer((req,res)=>{
  if(req.url==='/__revision'){res.setHeader('Cache-Control','no-store');res.end(String(revision));return}
  try{

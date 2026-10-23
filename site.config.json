@@ -31,7 +31,8 @@
       "title": "歡迎來到 Jardi",
       "group": "開始探索",
       "icon": "✿",
-      "description": "從第一次連接，到自在探索。一起認識你的 iPhone 虛擬定位工具。"
+      "description": "從第一次連接，到自在探索。一起認識你的 iPhone 虛擬定位工具。",
+      "descriptionEn": "Jardi is a Mac app for simulating your iPhone's location. Set coordinates, save favorite places, and follow custom routes with the installation and user guides."
     },
     {
       "file": "Install.md",
@@ -39,7 +40,8 @@
       "title": "下載安裝",
       "group": "開始探索",
       "icon": "⬇︎",
-      "description": "準備 Mac 與 iPhone，完成安裝、權限與 USB 連接。"
+      "description": "準備 Mac 與 iPhone，完成安裝、權限與 USB 連接。",
+      "descriptionEn": "Download Jardi for Apple Silicon Macs running macOS 14 or later. Follow installation, Developer Mode, USB connection, and first-location setup instructions."
     },
     {
       "file": "UserGuide_0.md",
@@ -47,7 +49,8 @@
       "title": "介面介紹",
       "group": "使用指南",
       "icon": "⌑",
-      "description": "認識狀態、主功能、歷史紀錄與提醒四大區塊。"
+      "description": "認識狀態、主功能、歷史紀錄與提醒四大區塊。",
+      "descriptionEn": "Learn the Jardi interface: connection status, location and movement controls, history, saved places, and notification settings."
     },
     {
       "file": "UserGuide_1.md",
@@ -55,7 +58,8 @@
       "title": "虛擬定位",
       "group": "使用指南",
       "icon": "⊹",
-      "description": "飛經緯度、選擇世界景點與標籤座標，以及清除定位。"
+      "description": "飛經緯度、選擇世界景點與標籤座標，以及清除定位。",
+      "descriptionEn": "Set an iPhone location from your Mac using latitude and longitude, world landmarks, or saved coordinates. Learn how to clear the simulated location."
     },
     {
       "file": "UserGuide_1-2.md",
@@ -63,7 +67,8 @@
       "title": "虛擬移動",
       "group": "使用指南",
       "icon": "↝",
-      "description": "方形螺旋、沿線移動與 Advanced 設定的互動示範。"
+      "description": "方形螺旋、沿線移動與 Advanced 設定的互動示範。",
+      "descriptionEn": "Simulate iPhone movement with square spiral routes, line movement, and advanced options. Explore interactive examples and route controls in Jardi."
     },
     {
       "file": "UserGuide_2.md",
@@ -71,7 +76,8 @@
       "title": "圖片座標工具",
       "group": "使用指南",
       "icon": "𖥣",
-      "description": "從圖片中的標記，整理出自己的座標與路線。"
+      "description": "從圖片中的標記，整理出自己的座標與路線。",
+      "descriptionEn": "Use Jardi’s image coordinate tool to calibrate map images, detect markers, and organize coordinates into reusable routes."
     },
     {
       "file": "UserGuide_3.md",
@@ -79,7 +85,8 @@
       "title": "通知與鈴鐺",
       "group": "使用指南",
       "icon": "♧",
-      "description": "讓小鈴鐺提醒你路線進度與連線狀態。"
+      "description": "讓小鈴鐺提醒你路線進度與連線狀態。",
+      "descriptionEn": "Configure Jardi notifications and the bell to follow route progress, movement completion, and iPhone connection status."
     },
     {
       "file": "Data.md",
@@ -87,7 +94,8 @@
       "title": "地點、路徑與備份",
       "group": "使用指南",
       "icon": "⛁",
-      "description": "編輯常用地點，把喜歡的路線好好保存。"
+      "description": "編輯常用地點，把喜歡的路線好好保存。",
+      "descriptionEn": "Manage saved places and routes in Jardi. Edit CSV files, organize location data, and back up your favorite coordinates and paths."
     },
     {
       "file": "Example.md",
@@ -95,7 +103,8 @@
       "title": "範例練習",
       "group": "範例練習",
       "icon": "✧",
-      "description": "從一個座標開始，練習三種日常操作。"
+      "description": "從一個座標開始，練習三種日常操作。",
+      "descriptionEn": "Practice Jardi with step-by-step examples: set a coordinate, save a favorite place, and try simulated movement along a route."
     },
     {
       "file": "FAQ.md",
@@ -103,7 +112,8 @@
       "title": "常見問題",
       "group": "More",
       "icon": "?",
-      "description": "連不上手機、定位沒恢復？從這裡找答案。"
+      "description": "連不上手機、定位沒恢復？從這裡找答案。",
+      "descriptionEn": "Troubleshoot Jardi installation, iPhone USB connections, Developer Mode, simulated location, movement, and app updates."
     },
     {
       "file": "About.md",
@@ -111,7 +121,8 @@
       "title": "關於 Jardi",
       "group": "More",
       "icon": "❀",
-      "description": "一個讓定位與路線整理更簡單的 Mac 小工具。"
+      "description": "一個讓定位與路線整理更簡單的 Mac 小工具。",
+      "descriptionEn": "Meet Jardi - Location Tool and its creator jardiniere_pkm. Learn about the Mac app, local data handling, and versioned documentation."
     },
     {
       "file": "Problem.md",
@@ -119,7 +130,8 @@
       "title": "回報問題",
       "group": "More",
       "icon": "✎",
-      "description": "整理技術問題、操作疑問與文件建議，建立一份清楚的回報。"
+      "description": "整理技術問題、操作疑問與文件建議，建立一份清楚的回報。",
+      "descriptionEn": "Report a Jardi bug, connection issue, documentation problem, or feature suggestion. Include your app version and steps to reproduce the issue."
     },
     {
       "file": "Support.md",
@@ -127,7 +139,8 @@
       "title": "贊助支持",
       "group": "More",
       "icon": "♡",
-      "description": "分享使用心得，陪 Jardi 一點一點成長。"
+      "description": "分享使用心得，陪 Jardi 一點一點成長。",
+      "descriptionEn": "Support Jardi development, share feedback, and help improve the iPhone location simulation tool and its documentation."
     }
   ],
   "feedback": {

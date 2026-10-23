@@ -156,3 +156,7 @@ GitHub Pages 會提供各路徑的 `index.html`，可直接開啟與重新整理
 Cloudflare Web Analytics 與 GA4 設定在 `site.config.json` 的 `analytics` 區塊，
 也可使用 GitHub Actions repository variables。未填入真實 ID 時維持停用。
 GA4 的後台換頁追蹤設定、事件名稱、測試與部署步驟請見 [ANALYTICS.md](ANALYTICS.md)。
+
+## Google Search 與 SEO
+
+建置會自動產生 `sitemap.xml`、`robots.txt`、中英文 canonical / hreflang 與 App 結構化資料。中英文描述在 `site.config.json` 的 `description` / `descriptionEn`。英文搜尋入口為 `/en/` 與 `/en/location/` 等；原有乾淨網址與語言／版本選擇繼續支援。設定及 Google Search Console 提交流程見 [SEO.md](SEO.md)。

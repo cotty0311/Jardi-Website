@@ -8,6 +8,7 @@ import { translate } from './i18n.mjs';
 import { renderMedia } from './media.mjs';
 import { installFavicons } from './favicon.mjs';
 import { analyticsConfig, installAnalytics } from './analytics.mjs';
+import { seoHead, publicPath, writeCrawlFiles } from './seo.mjs';
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const slugify = s => s.toLowerCase().replace(/<[^>]*>/g, '').replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s+/g, '-');
@@ -32,7 +33,7 @@ export function build() {
  const label = v => `${v.version} · ${v.status === 'stable' ? 'stable' : '準備中'}`;
  for (const v of versions) for (const lang of languages) {
   const isEnglish = lang.code === 'en';
-  const pages = (v.pages || config.pages).map(p=>isEnglish ? {...p,title:translate(p.title),group:translate(p.group),description:fs.readFileSync(path.join(root,v.content,'en',p.file),'utf8').split('\n').find(line=>line && !line.startsWith('#')) || translate(p.title)} : p);
+  const pages = (v.pages || config.pages).map(p=>isEnglish ? {...p,title:translate(p.title),group:translate(p.group),description:p.descriptionEn || translate(p.title)} : p);
   const folder = path.join(out, v.version, lang.code);
   // Keep Markdown-local images beside each version/language's generated pages.
   const contentRoot = path.join(root, v.content, lang.code);
@@ -90,20 +91,23 @@ export function build() {
     body = body.replace(/<h1[^>]*>.*?<\/h1>\s*<p>.*?<\/p>/s,'');
     intro = `<section class="hero"><div class="hero-copy"><span class="eyebrow"></span><h1>${h1}</h1><p>${p}</p><div class="hero-actions"><a class="button" href="install.html">開始使用 <span>↗</span></a><a class="text-link" href="interface.html">閱讀使用指南 →</a></div><span class="hero-note"> </span></div><div class="hero-art"><img src="../../assets/jardi.webp" alt="粉色花朵與蝴蝶翅膀的 Jardi 花園插畫" width="420" height="420"><span class="art-caption"></span></div></section><div class="quick-facts"><span>⌘ &nbsp; macOS 14+</span><span>◉ &nbsp; Apple Silicon</span><span>⌁ &nbsp; USB 連接 iPhone</span><span>文 &nbsp; 繁體中文指南</span></div>`;
    }
-   index.push({title:page.title,url:page.slug==='index'?'/':'/'+page.slug,text:raw.replace(/<!--.*?-->/gs,'').replace(/\{\{[^}]+\}\}/g,'').replace(/<[^>]*>/g,'').replace(/[#*`>|]/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')});
+   index.push({title:page.title,url:publicPath(v.version,lang.code,page.slug,latest.version,languages[0].code),text:raw.replace(/<!--.*?-->/gs,'').replace(/\{\{[^}]+\}\}/g,'').replace(/<[^>]*>/g,'').replace(/[#*`>|]/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')});
    const prev=docs[pageIndex-1],next=docs[pageIndex+1];
    const sidebar = [...new Set(pages.map(p=>p.group))].map(group=>`<div class="nav-group"><p>${esc(group)}</p>${pages.filter(p=>p.group===group).map(p=>`<a ${p.slug===page.slug ? 'class="active" aria-current="page"' : ''} href="${p.slug}.html"><span aria-hidden="true">${p.icon}</span>${esc(p.title)}</a>`).join('')}</div>`).join('');
    const versionOptions=versions.map(other=>`<option value="${other.version}" data-url="../../${other.version}/${lang.code}/${(other.pages || config.pages).some(p=>p.slug===page.slug) ? page.slug : 'index'}.html" ${other.version===v.version?'selected':''}>${esc(label(other))}</option>`).join('');
    const html=`<!doctype html>
-<html lang="${lang.htmlLang || lang.code}" data-version="${v.version}"><head><base href="/${v.version}/${lang.code}/"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(page.description)}"><meta name="theme-color" content="#fffcf2"><title>${esc(page.title)} · Jardi ${v.version}</title><link rel="canonical" href="https://${config.domain}${page.slug==='index'?'/':'/'+page.slug}"><link rel="stylesheet" href="../../assets/style.css"><script>try{document.documentElement.dataset.theme=localStorage.getItem('jardi-theme')||'auto'}catch{}</script><script src="../../assets/app.js" defer></script><script src="../../assets/media.js" defer></script><script src="../../assets/report.js" defer></script></head>
+<html lang="${lang.htmlLang || lang.code}" data-version="${v.version}"><head><base href="/${v.version}/${lang.code}/"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fffcf2">${seoHead(config,v,lang,page,latest.version)}<link rel="stylesheet" href="../../assets/style.css"><script>try{document.documentElement.dataset.theme=localStorage.getItem('jardi-theme')||'auto'}catch{}</script><script src="../../assets/app.js" defer></script><script src="../../assets/media.js" defer></script><script src="../../assets/report.js" defer></script></head>
 <body data-page="${page.slug}" data-guide="${page.group===(isEnglish?'User Guide':'使用指南')}"><a class="skip-link" href="#main">跳到主要內容</a><header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><img src="../../assets/jardi-mark.webp" width="36" height="36" alt=""><span>Jardi<span class="brand-dot">.</span></span></a><nav class="top-nav" aria-label="主要導覽"><a href="install.html" ${page.slug==='install'?'aria-current="page"':''}>Install</a><details class="more guide" ${['interface','location','movement','images','notifications','data'].includes(page.slug)?'aria-current="page"':''}><summary>User Guide <span>⌄</span></summary><div>${pages.filter(p=>['interface','location','movement','images','notifications','data'].includes(p.slug)).map(p=>`<a href="${p.slug}.html" ${p.slug===page.slug?'aria-current="page"':''}>${esc(p.title)}</a>`).join('')}</div></details><a href="examples.html" ${page.slug==='examples'?'aria-current="page"':''}>Example</a><details class="more"><summary>More <span>⌄</span></summary><div><a href="faq.html">FAQ · 常見問題</a><a href="about.html">About us · 關於</a><a href="problem.html">Problem · 回報問題</a><a href="support.html">Support · 贊助支持</a></div></details></nav><div class="toolbar"><select id="version" aria-label="Jardi 文件版本">${versionOptions}</select><button id="search-open" aria-label="搜尋文件"><span>⌕</span><span class="search-label">搜尋</span><kbd>⌘ K</kbd></button><button id="theme" title="切換色彩模式" aria-label="切換色彩模式">◐</button><select id="language" aria-label="文件語言">${config.languages.map(l=>`<option value="../${l.code}/${page.slug}.html" ${l.enabled?'':'disabled'} ${l.code===lang.code?'selected':''}>${esc(l.label)}</option>`).join('')}</select></div></div></header>
 <div class="mobile-bar"><button id="menu" aria-expanded="false" aria-controls="sidebar">☰ &nbsp; 文件目錄</button><span>Jardi ${esc(v.version)}</span></div><div class="layout"><aside class="sidebar" id="sidebar" aria-label="文件目錄"><a href="index.html" class="sidebar-heading">THE JARDI HANDBOOK <span>✿</span></a>${sidebar}</aside><main id="main" tabindex="-1"><div class="breadcrumbs"><a href="index.html">文件</a><span>/</span><span>${esc(page.group)}</span><span class="version-tag">${esc(label(v))}</span></div>${intro}${toc.length ? `<details class="mobile-toc"><summary>在這一頁</summary>${toc.map(t=>`<a href="#${esc(t.id)}">${esc(t.text)}</a>`).join('')}</details>` : ''}<article class="prose">${body}</article><div class="page-nav">${prev?`<a href="${prev.slug}.html"><small>← 上一頁</small>${esc(prev.title)}</a>`:'<span></span>'}${next?`<a href="${next.slug}.html"><small>接著閱讀 →</small>${esc(next.title)}</a>`:''}</div><footer><span>Jardi <span class="pink">✿</span> &nbsp;</span><a href="problem.html">協助改善這一頁 ↗</a></footer></main><aside class="toc" aria-label="本頁目錄"><p>在這一頁</p><nav>${toc.map(t=>`<a href="#${esc(t.id)}">${esc(t.text)}</a>`).join('')}</nav></aside></div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="search-heading"><h2 id="search-title">搜尋 Jardi 指南</h2><button id="search-close" aria-label="關閉搜尋">✕</button></div><label class="sr-only" for="search-input">搜尋關鍵字</label><input id="search-input" type="search" placeholder="搜尋定位、安裝、Orbit…" autocomplete="off"><p id="search-status" role="status">輸入關鍵字，搜尋目前版本的文件。</p><div id="search-results"></div><small class="search-foot">目前版本 ${esc(v.version)} · Esc 關閉</small></dialog></body></html>`;
    const cached=html.replace(/(src|href)="(\.\.\/\.\.\/assets\/[^"?]+\.(?:css|js))"/g,(_,attr,url)=>`${attr}="${url}?v=${createHash('sha256').update(fs.readFileSync(path.join(root,url.replace('../../','')))).digest('hex').slice(0,12)}"`);
-   const rendered=(isEnglish ? translate(cached) : cached).replace(/href="([a-z-]+)\.html(#[^"]*)?"/g,(_,slug,hash='')=>`href="${slug==='index'?'/':'/'+slug}${hash}"`);
-   const resolved=rendered.replace(/href="#([^"]*)"/g,(_,hash)=>`href="${page.slug==='index'?'/':'/'+page.slug}#${hash}"`);
+   const rendered=(isEnglish ? translate(cached) : cached).replace(/href="([a-z-]+)\.html(#[^"]*)?"/g,(_,slug,hash='')=>`href="${publicPath(v.version,lang.code,slug,latest.version,languages[0].code)}${hash}"`);
+   const resolved=rendered.replace(/href="#([^"]*)"/g,(_,hash)=>`href="${publicPath(v.version,lang.code,page.slug,latest.version,languages[0].code)}#${hash}"`);
    write(path.join(folder,`${page.slug}.html`),resolved);
-   if(v.version===latest.version && lang===languages[0])write(path.join(out,page.slug==='index'?'index.html':`${page.slug}/index.html`),resolved);
+   if(v.version===latest.version){
+    const route=publicPath(v.version,lang.code,page.slug,latest.version,languages[0].code);
+    write(path.join(out,route.replace(/^\//,'')+(route.endsWith('/')?'index.html':'/index.html')),resolved);
+   }
   }
   write(path.join(folder,'search.json'),JSON.stringify(index));
   if(lang.code === 'zh') for(const page of pages){
@@ -114,6 +118,7 @@ export function build() {
  write(path.join(out,'index/index.html'),'<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/"><title>Jardi</title></head><body><a href="/">Jardi</a></body></html>');
 
  write(path.join(out,'404.html'),'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>找不到頁面 · Jardi</title></head><body style="font:18px system-ui;background:#fffcf2;color:#4e4533;padding:10vw"><h1>這條小路還沒有頁面。</h1><p>請確認網址，或用瀏覽器返回上一頁，從文件目錄繼續探索。</p></body></html>');
+ writeCrawlFiles(out,config,latest.version);
  installAnalytics(root,out,tracking);
  installFavicons(root,out);
  write(path.join(out,'.nojekyll'),'');

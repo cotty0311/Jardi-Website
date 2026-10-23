@@ -3,7 +3,10 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {build,root} from './build.mjs';
 import {analyticsConfig} from './analytics.mjs';
-const tracking=analyticsConfig(build());
+import { checkSEO } from './seo-check.mjs';
+import { publicPath } from './seo.mjs';
+const config=build();
+const tracking=analyticsConfig(config);
 const out=path.join(root,'dist');
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(p,e.name)):[path.join(p,e.name)]);
 const files=walk(out), htmlFiles=files.filter(f=>f.endsWith('.html'));
@@ -54,8 +57,11 @@ for(const f of htmlFiles){
  }
  if(html.includes('class="layout"')){
   assert.ok(html.includes('<base href="/'),`Missing content base: ${f}`);
+  const [,version,language]=baseURL.pathname.match(/^\/([^/]+)\/([^/]+)\//);
+  const latest=config.versions.filter(v=>v.status==='stable').sort((a,b)=>b.version.localeCompare(a.version,undefined,{numeric:true}))[0] || config.versions.find(v=>v.version===config.current) || config.versions[0];
+  const allowed=new Set((config.versions.find(v=>v.version===version).pages || config.pages).map(p=>publicPath(version,language,p.slug,latest.version,config.languages.find(l=>l.enabled).code)));
   for(const [,href] of html.matchAll(/<a[^>]*href="([^"]+)"/g)){
-   if(href.startsWith('/')&&!href.startsWith('//'))assert.ok(!/\.html|\/(?:zh|en)\/|\d+\.\d+\.\d+/.test(href),`Noncanonical document link: ${href}`);
+   if(href.startsWith('/')&&!href.startsWith('//'))assert.ok(allowed.has(new URL(href,baseURL).pathname),`Noncanonical document link: ${href}`);
   }
   if(html.includes('data-page="install"')){
    const download=html.match(/<a[^>]*class="button"[^>]*href="([^"]+\.dmg)"[^>]*>/)?.[0];
@@ -84,5 +90,6 @@ for(const f of files.filter(f=>f.endsWith('.css'))){
   count++;
  }
 }
-for(const f of files.filter(f=>f.endsWith('search.json'))){const docs=JSON.parse(fs.readFileSync(f));assert.ok(docs.length);for(const doc of docs){assert.ok(doc.title&&doc.text);assert.ok(fs.existsSync(path.join(out,doc.url==='/'?'index.html':doc.url+'/index.html')))}}
+for(const f of files.filter(f=>f.endsWith('search.json'))){const docs=JSON.parse(fs.readFileSync(f));assert.ok(docs.length);for(const doc of docs){assert.ok(doc.title&&doc.text);let target=path.join(out,doc.url);if(fs.existsSync(target)&&fs.statSync(target).isDirectory())target=path.join(target,'index.html');assert.ok(fs.existsSync(target),`Missing search route: ${doc.url}`)}}
+checkSEO(out,config);
 console.log(`Passed: ${htmlFiles.length} HTML pages, ${count} local asset/link/anchor references, search indexes.`);
